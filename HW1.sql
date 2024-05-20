@@ -1,6 +1,6 @@
 USE HuskyGram;
 
-SELECT p.id, image_url, COUNT(comment_text) AS comment_count
+SELECT photo_id, image_url, COUNT(comment_text) AS comment_count
 FROM photos p LEFT OUTER JOIN comments c ON p.id = c.photo_id
 GROUP BY photo_id, p.created_at, p.image_url
 ORDER BY p.created_at DESC;
@@ -30,6 +30,4 @@ SELECT username, u.created_at AS joined_date
 FROM users u LEFT OUTER JOIN photos p ON u.id = p.user_id
 WHERE p.id IS NULL
 ORDER BY username;
-
-
 

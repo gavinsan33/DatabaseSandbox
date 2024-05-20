@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS follows (
     created_at DATETIME,
-    follower_id INT UNIQUE NOT NULL,
-    followee_id INT UNIQUE NOT NULL,
+    follower_id INT,
+    followee_id INT,
     PRIMARY KEY(follower_id, followee_id),
     FOREIGN KEY (followee_id) REFERENCES users(id),
     FOREIGN KEY (follower_id) REFERENCES users(id)
@@ -21,15 +21,12 @@ CREATE TABLE IF NOT EXISTS follows (
 
 CREATE TABLE IF NOT EXISTS photos (
     image_url VARCHAR(255),
-    user_id INT UNIQUE NOT NULL,
+    user_id INT,
     created_at DATETIME,
     id INT UNIQUE NOT NULL,
     PRIMARY KEY(id),
-    FOREIGN KEY (id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
-
-DROP table photo_tags;
-DROP table tags;
 
 CREATE TABLE IF NOT EXISTS tags (
     tagname VARCHAR(255),
@@ -39,8 +36,8 @@ CREATE TABLE IF NOT EXISTS tags (
 );
 
 CREATE TABLE IF NOT EXISTS photo_tags (
-    photo_id INT NOT NULL,
-    tag_id INT UNIQUE NOT NULL,
+    photo_id INT,
+    tag_id INT,
     FOREIGN KEY (photo_id) REFERENCES photos(id),
     FOREIGN KEY (tag_id) REFERENCES tags(id),
     PRIMARY KEY(photo_id, tag_id)
@@ -59,36 +56,78 @@ CREATE TABLE IF NOT EXISTS comments (
 
 CREATE TABLE IF NOT EXISTS likes (
     created_at DATETIME,
-    user_id INT UNIQUE NOT NULL,
+    user_id INT NOT NULL,
     photo_id int,
     PRIMARY KEY(user_id, photo_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (photo_id) REFERENCES photos(id)
 );
 
-INSERT INTO users (username, created_at, id) VALUES ('john_doe', '2022-01-01 10:00:00', 1), ('jane_smith', '2022-01-02 15:30:00', 2);
+-- Insert data into users
+INSERT INTO users (username, created_at, id) VALUES
+('user1', '2024-01-01 10:00:00', 1),
+('user2', '2024-01-02 11:00:00', 2),
+('user3', '2024-01-03 12:00:00', 3),
+('user4', '2024-01-04 13:00:00', 4),
+('user5', '2024-01-05 14:00:00', 5);
 
-INSERT INTO follows (created_at, follower_id, followee_id) VALUES ('2022-01-03 09:45:00', 1, 2), ('2022-01-04 14:20:00', 2, 1);
+-- Insert data into follows
+INSERT INTO follows (created_at, follower_id, followee_id) VALUES
+('2024-01-01 10:00:00', 1, 2),
+('2024-01-01 10:00:00', 2, 1),
+('2024-01-01 10:00:00', 1, 3),
+('2024-01-01 10:00:00', 3, 1),
+('2024-01-01 10:00:00', 2, 3),
+('2024-01-01 10:00:00', 3, 2),
+('2024-01-01 10:00:00', 4, 5);
 
-INSERT INTO photos (image_url, user_id, created_at, id) VALUES ('https://example.com/photo1.jpg', 1, '2022-01-05 11:10:00', 1), ('https://example.com/photo2.jpg', 2, '2022-01-06 16:40:00', 2);
+-- Insert data into photos
+INSERT INTO photos (image_url, user_id, created_at, id) VALUES
+('photo1_url', 1, '2024-01-01 10:00:00', 1),
+('photo2_url', 1, '2024-01-01 11:00:00', 2),
+('photo3_url', 2, '2024-01-02 10:00:00', 3),
+('photo4_url', 2, '2024-01-02 11:00:00', 4),
+('photo5_url', 3, '2024-01-03 10:00:00', 5),
+('photo6_url', 4, '2024-01-04 10:00:00', 6);
 
-INSERT INTO tags (tagname, created_at, id) VALUES ('#NEU', '2022-01-07 08:30:00', 1), ('#BU', '2022-01-08 13:15:00', 2);
+-- Insert data into tags
+INSERT INTO tags (tagname, created_at, id) VALUES
+('nature', '2024-01-01 10:00:00', 1),
+('animal', '2024-01-01 10:30:00', 2),
+('travel', '2024-01-01 11:00:00', 3),
+('food', '2024-01-01 11:30:00', 4);
 
-INSERT INTO photo_tags (photo_id, tag_id) VALUES (1, 1), (1, 2);
+-- Insert data into photo_tags
+INSERT INTO photo_tags (photo_id, tag_id) VALUES
+(1, 1),
+(1, 2),
+(2, 3),
+(3, 1),
+(3, 4),
+(4, 2),
+(5, 3),
+(6, 4);
 
-INSERT INTO comments (comment_text, user_id, photo_id, created_at, id) VALUES ('Great photo!', 1, 1, '2022-01-09 07:20:00', 1), ('Beautiful!', 2, 2, '2022-01-10 12:05:00', 2);
 
-INSERT INTO likes (created_at, user_id, photo_id) VALUES ('2022-01-11 06:50:00', 1, 2), ('2022-01-12 11:25:00', 2, 1);
+-- Insert data into likes
+INSERT INTO likes (created_at, user_id, photo_id) VALUES
+('2024-01-01 10:00:00', 1, 1),
+('2024-01-01 10:05:00', 2, 1),
+('2024-01-01 11:00:00', 1, 2),
+('2024-01-02 10:00:00', 3, 3),
+('2024-01-02 11:00:00', 4, 4),
+('2024-01-03 10:00:00', 5, 5),
+('2024-01-04 10:00:00', 1, 6),
+('2024-01-04 10:00:00', 2, 6),
+('2024-01-04 10:00:00', 3, 6);
 
-INSERT INTO tags (tagname, created_at, id) VALUES ('#NEU', '2022-01-07 08:30:00', 3), ('#hi', '2022-01-08 13:15:00', 4);
-INSERT INTO photo_tags (photo_id, tag_id) VALUES (2, 3), (2, 4);
+-- Insert data into comments
+INSERT INTO comments (comment_text, user_id, photo_id, created_at, id) VALUES
+('Nice photo!', 1, 1, '2024-01-01 10:30:00', 1),
+('Amazing shot!', 2, 2, '2024-01-01 11:30:00', 2),
+('Beautiful!', 3, 3, '2024-01-02 10:30:00', 3),
+('Great capture!', 4, 4, '2024-01-02 11:30:00', 4),
+('Wonderful!', 5, 5, '2024-01-03 10:30:00', 5),
+('Stunning!', 1, 6, '2024-01-04 10:30:00', 6);
 
-INSERT INTO comments (comment_text, user_id, photo_id, created_at, id) VALUES ('asdknkacollegenxkjnx!', 1, 1, '2022-01-09 07:20:00', 3);
 
-INSERT INTO users (username, created_at, id) VALUES ('jennifer_wong', '2022-01-13 09:00:00', 3);
-
-INSERT INTO users (username, created_at, id) VALUES ('alice_smith', '2022-01-18 09:30:00', 6);
-
-INSERT INTO photos (image_url, user_id, created_at, id) VALUES ('https://example.com/photo4.jpg', 6, '2022-01-19 14:40:00', 5);
-
-INSERT INTO likes (created_at, user_id, photo_id) VALUES ('2022-01-20 11:50:00', 1, 5), ('2022-01-21 16:10:00', 2, 5);
