@@ -30,4 +30,3 @@ SELECT username, u.created_at AS joined_date
 FROM users u LEFT OUTER JOIN photos p ON u.id = p.user_id
 WHERE p.id IS NULL
 ORDER BY username;
-
